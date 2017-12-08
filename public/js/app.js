@@ -263,13 +263,23 @@ class ToggleableTimerForm extends React.Component{
 }
 //------------------------------------------------------------------------------
 class Timer extends React.Component{
+  componentDidMount(){
+    //a cada 50ms ativa a fn forceUpdate, da react, que força a atualização do componente
+    this.forceUpdateInterval = setInterval(()=>this.forceUpdate(), 50);
+  }
+
+  compnentWillUnmount(){
+    //Serve para remover o forceUpdate que está agendado no forceUpdateInterval
+    clearInterval(this.forceUpdateInterval);
+  }
+
   onDeleteButtonClick = ()=>{
       this.props.onDeleteClick(this.props);
       //console.log(this.props);
   };
 
   render(){
-    const elapsedString = helpers.renderElapsedString(this.props.elapsed);
+    const elapsedString = helpers.renderElapsedString(this.props.elapsed, this.props.runningSince);
     return(
       <div className='ui centered card'>
         <div className='content'>
