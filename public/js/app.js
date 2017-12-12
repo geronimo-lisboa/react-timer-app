@@ -276,6 +276,13 @@ class Timer extends React.Component{
   handleTrashClick = ()=>{
       this.props.onDeleteClick(this.props);
   };
+  
+  handleStartClick = ()=>{
+      this.props.onStartClick(this.props.id);
+  }
+  handleStopClick = ()=>{
+      this.props.onStopClick(this.props.id);
+  }
 
   render(){
     const elapsedString = helpers.renderElapsedString(this.props.elapsed, this.props.runningSince);
@@ -306,14 +313,26 @@ class Timer extends React.Component{
             <i className='trash icon' />
           </span>
         </div>
-        <div className='ui bottom attached blue basic button'>
-          Start
-        </div>
+        <TimerActionButton
+            timerIsRunning={!!this.props.runningSince}
+            onStartClick={this.handleStartClick}
+            onStopClick={this.handleStopClick}
+        />
+        
       </div>
     );
   }
 }
 
+class TimerActionButton extends React.Component{
+    render(){
+        return(
+            <div>
+                fok
+            </div>
+        );
+    }
+}
 //Responsável pela renderização do dashboard na div de id = content
 ReactDOM.render(
   <TimersDashboard />,
