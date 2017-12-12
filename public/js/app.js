@@ -263,13 +263,22 @@ class ToggleableTimerForm extends React.Component{
 }
 //------------------------------------------------------------------------------
 class Timer extends React.Component{
-  onDeleteButtonClick = ()=>{
+  componentDidMount(){
+      //Seta a funçao setIterval para executar a cada 50 ms invocado forceUpdate.
+      //O resultado é que a cada 50 ms o timer será atualizado.
+      this.forceUpdateInterval = setInterval( () => this.forceUpdate(), 50 );
+  }  
+  //O componente está sendo desmontado - remove o timer que agora é desnecessário.
+  componentWillUnmount(){
+      clearInterval(this.forceUpdateInterval)
+  }  
+  //Disparada qdo o usuário clica na lixeirinha
+  handleTrashClick = ()=>{
       this.props.onDeleteClick(this.props);
-      //console.log(this.props);
   };
 
   render(){
-    const elapsedString = helpers.renderElapsedString(this.props.elapsed);
+    const elapsedString = helpers.renderElapsedString(this.props.elapsed, this.props.runningSince);
     return(
       <div className='ui centered card'>
         <div className='content'>
@@ -293,7 +302,7 @@ class Timer extends React.Component{
               <i className='edit icon' />
           </span>
           <span className='right floated trash icon'
-                onClick={this.onDeleteButtonClick}>
+                onClick={this.handleTrashClick}>
             <i className='trash icon' />
           </span>
         </div>
