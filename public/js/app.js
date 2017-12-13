@@ -1,6 +1,7 @@
 ////O dashboard que contém tudo
 class TimersDashboard extends React.Component{
   //O estado do TimersDashboard são as listas dos atributos dos timers.
+  /*
   state = {
     timers: [
       {
@@ -19,7 +20,29 @@ class TimersDashboard extends React.Component{
       },
     ],
   };
-
+  */
+ //Timers é inicializado para uma lista vazia para não quebrar código. Os componentes
+ //terão sucesso em suas montagens iniciais, só não terão dados.
+  state = {
+      timers:[],
+  };
+  //Invocada depois que o componente é montado. Depois de montado eu devo puxar os dados
+  //do servidor pra popular os estados.
+  componentDidMount(){
+    this.loadTimersFromServer();
+    setInterval(this.loadTimersFromServer, 5000);//A cada 5 segundos pega o dado do servidor.
+  }
+  
+  loadTimersFromServer = ()=>{
+      //Client me foi fornecido pelo autor do livro e encapsula a comunicação com o servidor
+      client.getTimers((serverTimers)=>{
+          //Quando a requisição estiver concluída, seta a lista de timers pra lista de
+          //timers buscada no server. Como a modificação está sendo feita via setState, 
+          //todo o ciclo de vida do React será ativado.
+         this.setState({timers:serverTimers});
+      });
+  }
+  
   handleCreateFormSubmit = (timer)=>{
     this.createTimer(timer);
   };
