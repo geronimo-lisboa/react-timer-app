@@ -74,6 +74,7 @@ class TimersDashboard extends React.Component{
   
   startTimer = (timerId)=>{
       const now = Date.now();
+      //seta o estado local
       this.setState({
           timers : this.state.timers.map((timer)=>{
             if(timer.id===timerId){
@@ -83,6 +84,8 @@ class TimersDashboard extends React.Component{
             }
           }),
       });
+      //manda o estado pro servidor usando a função preparada pelo autor do livro
+      client.startTimer({id:timerId, start:now});
   };
   
   stopTimer = (timerId)=>{
@@ -100,6 +103,7 @@ class TimersDashboard extends React.Component{
             }
           }),
       });
+      client.stopTimer({id:timerId, stop:now});
   };
   
   updateTimer = (attrs)=>{
