@@ -36,12 +36,49 @@ class TimersDashboard extends React.Component{
     const modList = this.state.timers.filter((element)=>{
       return (element.id !== timerToDelete.id);
     });
-
     this.setState({
         timers:modList,
     });
   }
-
+  
+  handleStartClick = (timerId)=>{
+      this.startTimer(timerId);
+  }
+  
+  handleStopClick = (timerId)=>{
+      this.stopTimer(timerId);
+  }
+  
+  startTimer = (timerId)=>{
+      const now = Date.now();
+      this.setState({
+          timers : this.state.timers.map((timer)=>{
+            if(timer.id===timerId){
+                return Object.assign({}, timer, {runningSince:now});
+            }else{
+                return timer;
+            }
+          }),
+      });
+  };
+  
+  stopTimer = (timerId)=>{
+      const now = Date.now();
+      this.setState({
+          timers : this.state.timers.map((timer)=>{
+            if(timer.id===timerId){
+                const lastElapsed = now - timer.runningSince;
+                return Object.assign({}, timer, {
+                    elapsed : timer.elapsed + lastElapsed,
+                    runningSince : null,
+                });
+            }else{
+                return timer;
+            }
+          }),
+      });
+  };
+  
   updateTimer = (attrs)=>{
     this.setState({
       timers:this.state.timers.map((timer) => {
@@ -74,6 +111,8 @@ class TimersDashboard extends React.Component{
             timers={this.state.timers}
             onFormSubmit={this.handleEditFormSubmit}
             onTimerDelete={this.handleDeleteTimer}
+            onStartClick={this.handleStartClick}
+            onStopClick={this.handleStopClick}
             />
           <ToggleableTimerForm
             onFormSubmit = {this.handleCreateFormSubmit}
@@ -96,6 +135,8 @@ class EditableTimerList extends React.Component{
             runningSince={timer.runningSince}
             onFormSubmit={this.props.onFormSubmit}
             onTimerDelete={this.props.onTimerDelete}
+            onStartClick={this.props.onStartClick}
+            onStopClick={this.props.onStopClick}
           />
         ));
         return (
@@ -158,6 +199,8 @@ class EditableTimer extends React.Component{
           runningSince={this.props.runningSince}
           onEditClick={this.handleEditClick}
           onDeleteClick={this.handleDeleteClick}
+          onStartClick={this.props.onStartClick}
+          onStopClick={this.props.onStopClick}
         />
       );
     }
@@ -326,11 +369,18 @@ class Timer extends React.Component{
 
 class TimerActionButton extends React.Component{
     render(){
-        return(
-            <div>
-                fok
-            </div>
-        );
+        if(this.props.timerIsRunning){
+            return(<div className='ui bottom attached red basic button'
+                    onClick={this.props.onStopClick}>
+                    Stop
+                   </div>);
+        }else{
+            return(<div className='ui bottom attached green basic button'
+                    onClick={this.props.onStartClick}>
+                    Start
+                   </div>);
+            
+        }
     }
 }
 //Responsável pela renderização do dashboard na div de id = content
