@@ -62,6 +62,7 @@ class TimersDashboard extends React.Component{
     this.setState({
         timers:modList,
     });
+    client.deleteTimer({id:timerToDelete.id});
   }
   
   handleStartClick = (timerId)=>{
@@ -119,6 +120,7 @@ class TimersDashboard extends React.Component{
           }
       }),
     });
+    client.updateTimer(attrs);
   }
 
   createTimer = (timer)=>{
@@ -126,6 +128,7 @@ class TimersDashboard extends React.Component{
     this.setState({
         timers : this.state.timers.concat(t),
     });
+    client.createTimer(t);
   };
 
   //O método de renderização do dashboard. Passa a lista de timers que é estado do
